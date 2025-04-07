@@ -27,8 +27,11 @@ export function useDataFiltering(data: OrderData[], filterState: FilterState) {
       }
 
       // State filter
-      if (filterState.state && item.State !== filterState.state) {
-        return false;
+      if (filterState.state) {
+        console.log(`Comparing item.State (${item.State}) with filterState.state (${filterState.state})`);
+        if (item.State !== filterState.state) {
+          return false;
+        }
       }
 
       // Category filter

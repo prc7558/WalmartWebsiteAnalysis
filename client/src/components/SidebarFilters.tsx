@@ -66,26 +66,8 @@ export default function SidebarFilters({
     // For the UI state, use the actual value including 'all'
     // We'll convert it back to '' when applying filters
     
-    // Reset state if country changes
-    if (field === 'country' && value !== localFilterState.country) {
-      const newState = {
-        ...localFilterState,
-        [field]: value,
-        state: 'all' // Reset state to 'all' when country changes
-      };
-      setLocalFilterState(newState);
-      
-      // If auto-apply for country filter (immediately apply the filter)
-      const filtersToApply: FilterState = {
-        ...newState,
-        country: newState.country === 'all' ? '' : newState.country,
-        category: newState.category === 'all' ? '' : newState.category,
-        segment: newState.segment === 'all' ? '' : newState.segment,
-        region: newState.region === 'all' ? '' : newState.region,
-        state: newState.state === 'all' ? '' : newState.state
-      };
-      setFilterState(filtersToApply);
-    } else if (field === 'state') {
+    // Check if the field is 'state' first
+    if (field === 'state') {
       // For state selection, auto-apply filter immediately
       const newState = {
         ...localFilterState,
@@ -94,6 +76,28 @@ export default function SidebarFilters({
       setLocalFilterState(newState);
       
       // Auto-apply for state filter
+      const filtersToApply: FilterState = {
+        ...newState,
+        country: newState.country === 'all' ? '' : newState.country,
+        category: newState.category === 'all' ? '' : newState.category,
+        segment: newState.segment === 'all' ? '' : newState.segment,
+        region: newState.region === 'all' ? '' : newState.region,
+        state: newState.state === 'all' ? '' : newState.state
+      };
+      console.log('State filter changed to:', value);
+      console.log('Applying filters with state:', filtersToApply.state);
+      setFilterState(filtersToApply);
+    }
+    // Reset state if country changes
+    else if (field === 'country' && value !== localFilterState.country) {
+      const newState = {
+        ...localFilterState,
+        [field]: value,
+        state: 'all' // Reset state to 'all' when country changes
+      };
+      setLocalFilterState(newState);
+      
+      // If auto-apply for country filter (immediately apply the filter)
       const filtersToApply: FilterState = {
         ...newState,
         country: newState.country === 'all' ? '' : newState.country,
