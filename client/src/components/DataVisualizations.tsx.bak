@@ -67,7 +67,7 @@ export default function DataVisualizations({ data }: DataVisualizationsProps) {
                 beginAtZero: true,
                 ticks: {
                   callback: function(value) {
-                    return '$' + value.toLocaleString();
+                    return '€' + value.toLocaleString();
                   }
                 }
               }
@@ -116,7 +116,7 @@ export default function DataVisualizations({ data }: DataVisualizationsProps) {
                 beginAtZero: true,
                 ticks: {
                   callback: function(value) {
-                    return '$' + value.toLocaleString();
+                    return '€' + value.toLocaleString();
                   }
                 }
               }

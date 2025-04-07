@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { DEFAULT_CURRENCY_FORMAT } from "@/lib/constants";
 
 interface DataTableProps {
   data: OrderData[];
@@ -71,11 +72,7 @@ export default function DataTable({ data }: DataTableProps) {
   };
   
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-EU', { 
-      style: 'currency', 
-      currency: 'EUR',
-      maximumFractionDigits: 0
-    }).format(value);
+    return new Intl.NumberFormat('en-US', DEFAULT_CURRENCY_FORMAT).format(value);
   };
   
   // Generate array of page numbers for pagination

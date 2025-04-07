@@ -10,9 +10,9 @@ export const CHART_COLORS = {
   background: 'rgba(0, 120, 212, 0.1)'
 };
 
-export const DEFAULT_CURRENCY_FORMAT = {
-  style: 'currency',
-  currency: 'EUR',
+export const DEFAULT_CURRENCY_FORMAT: Intl.NumberFormatOptions = {
+  style: 'currency' as const,
+  currency: 'USD',
   minimumFractionDigits: 0,
   maximumFractionDigits: 0
 };

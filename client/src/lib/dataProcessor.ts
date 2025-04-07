@@ -180,3 +180,77 @@ export function calculateShipModeDistribution(data: OrderData[]): Record<string,
   
   return percentages;
 }
+
+export function getMostProfitableProduct(data: OrderData[]): { product: string, profit: number, sales: number, category: string } {
+  // Create a map to store aggregated product data
+  const productMap: Record<string, { profit: number, sales: number, category: string }> = {};
+  
+  // Aggregate data by product name
+  data.forEach(item => {
+    const productName = item["Product Name"];
+    const profit = item["Profit"];
+    const sales = item["Total Sales"];
+    const category = item["Category"];
+    
+    if (!productMap[productName]) {
+      productMap[productName] = { profit: 0, sales: 0, category };
+    }
+    
+    productMap[productName].profit += profit;
+    productMap[productName].sales += sales;
+  });
+  
+  // Find the product with the highest profit
+  let mostProfitableProduct = "";
+  let highestProfit = -Infinity;
+  
+  Object.entries(productMap).forEach(([product, data]) => {
+    if (data.profit > highestProfit) {
+      highestProfit = data.profit;
+      mostProfitableProduct = product;
+    }
+  });
+  
+  return {
+    product: mostProfitableProduct,
+    profit: productMap[mostProfitableProduct]?.profit || 0,
+    sales: productMap[mostProfitableProduct]?.sales || 0,
+    category: productMap[mostProfitableProduct]?.category || ""
+  };
+}
+
+export function getTopCustomer(data: OrderData[]): { name: string, totalSales: number, orderCount: number } {
+  // Create a map to store customer data
+  const customerMap: Record<string, { totalSales: number, orderIds: Set<number> }> = {};
+  
+  // Aggregate data by customer name
+  data.forEach(item => {
+    const customerName = item["Customer Name"];
+    const sales = item["Total Sales"];
+    const orderId = item["Order ID"];
+    
+    if (!customerMap[customerName]) {
+      customerMap[customerName] = { totalSales: 0, orderIds: new Set() };
+    }
+    
+    customerMap[customerName].totalSales += sales;
+    customerMap[customerName].orderIds.add(orderId);
+  });
+  
+  // Find the customer with the highest total sales
+  let topCustomer = "";
+  let highestSales = -Infinity;
+  
+  Object.entries(customerMap).forEach(([customer, data]) => {
+    if (data.totalSales > highestSales) {
+      highestSales = data.totalSales;
+      topCustomer = customer;
+    }
+  });
+  
+  return {
+    name: topCustomer,
+    totalSales: customerMap[topCustomer]?.totalSales || 0,
+    orderCount: customerMap[topCustomer]?.orderIds.size || 0
+  };
+}
