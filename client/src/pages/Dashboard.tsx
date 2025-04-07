@@ -1,18 +1,29 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Download, Printer } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import SidebarFilters from "@/components/SidebarFilters";
 import DataSummary from "@/components/DataSummary";
 import DataVisualizations from "@/components/DataVisualizations";
-import DataTable from "@/components/DataTable";
+import { DataTable } from "@/components/DataTable";
 import HelpModal from "@/components/HelpModal";
+import PrintableView from "@/components/PrintableView";
+import { Button } from "@/components/ui/button";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { FilterState } from "@/lib/types";
 import { processData } from "@/lib/dataProcessor";
 import { useDataFiltering } from "@/lib/useDataFiltering";
+import { exportData } from "@/lib/exportUtils";
 
 export default function Dashboard() {
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [showPrintView, setShowPrintView] = useState(false);
   
   const { data, isLoading, error } = useQuery({
     queryKey: ['/api/data'],
@@ -81,9 +92,46 @@ export default function Dashboard() {
             </div>
           ) : (
             <>
+              <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold text-foreground">Walmart Sales Dashboard</h1>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2"
+                    onClick={() => setShowPrintView(true)}
+                  >
+                    <Printer className="h-4 w-4" />
+                    <span>Print Report</span>
+                  </Button>
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <Download className="h-4 w-4" />
+                        <span>Export</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => exportData(filteredData, 'csv', 'walmart_sales_data')}>
+                        Export as CSV
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => exportData(filteredData, 'json', 'walmart_sales_data')}>
+                        Export as JSON
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+              
               <DataSummary data={filteredData} />
               <DataVisualizations data={filteredData} />
               <DataTable data={filteredData} />
+              
+              <PrintableView 
+                data={filteredData} 
+                isOpen={showPrintView} 
+                onClose={() => setShowPrintView(false)} 
+              />
             </>
           )}
         </main>

@@ -1,0 +1,86 @@
+/* Print-specific styles */
+@media print {
+  /* Hide non-essential elements when printing */
+  body > *:not(.print-container) {
+    display: none !important;
+  }
+
+  /* Make sure the print container takes up the full page */
+  .print-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white !important;
+    color: black !important;
+    z-index: 9999;
+    padding: 20px;
+  }
+
+  /* Remove shadows, borders, etc. that don't print well */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Improve table rendering */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  /* Add page breaks */
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* Make sure text is black (even if theme is dark) */
+  body {
+    color: black !important;
+  }
+
+  /* Ensure cards have borders when printed */
+  .card {
+    border: 1px solid #ddd !important;
+    margin-bottom: 15px;
+  }
+
+  /* Remove any hover or focus styles */
+  a:hover, button:hover, a:focus, button:focus {
+    background: transparent !important;
+  }
+
+  /* Optimize font sizes for print */
+  h1 {
+    font-size: 24pt !important;
+  }
+
+  h2 {
+    font-size: 18pt !important;
+  }
+
+  h3 {
+    font-size: 14pt !important;
+  }
+
+  p, td, th, li {
+    font-size: 11pt !important;
+  }
+
+  /* Add URLs after links for print */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 90%;
+  }
+}

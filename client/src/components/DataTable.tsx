@@ -25,7 +25,7 @@ interface DataTableProps {
   data: OrderData[];
 }
 
-export default function DataTable({ data }: DataTableProps) {
+export function DataTable({ data }: DataTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("date_desc");
   const [currentPage, setCurrentPage] = useState(1);
