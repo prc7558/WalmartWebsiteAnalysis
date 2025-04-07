@@ -1,6 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import * as fs from 'fs';
+import * as path from 'path';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here
@@ -10,8 +12,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/data', async (req, res) => {
     try {
       // Use Node.js path to safely resolve the path
-      const fs = require('fs');
-      const path = require('path');
       const dataPath = path.resolve('./attached_assets/data.json');
       
       // Read the file
