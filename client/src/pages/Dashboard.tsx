@@ -17,7 +17,7 @@ export default function Dashboard() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['/api/data'],
     queryFn: async () => {
-      const response = await fetch('/attached_assets/data.json');
+      const response = await fetch('/api/data');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
