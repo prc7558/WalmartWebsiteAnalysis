@@ -39,13 +39,7 @@ export default function DataSummary({ data }: DataSummaryProps) {
               <div>
                 <p className="text-muted-foreground text-sm">Total Sales</p>
                 <h3 className="text-2xl font-bold text-foreground">{formatCurrency(totalSales)}</h3>
-                <p className={`text-xs ${salesChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {salesChange >= 0 ? 
-                    <TrendingUp className="inline mr-1 h-3 w-3" /> : 
-                    <TrendingDown className="inline mr-1 h-3 w-3" />
-                  }
-                  {Math.abs(salesChange).toFixed(1)}% vs previous period
-                </p>
+
               </div>
               <div className="bg-blue-100 p-2 rounded-lg">
                 <DollarSign className="text-primary text-xl" />
@@ -61,13 +55,7 @@ export default function DataSummary({ data }: DataSummaryProps) {
               <div>
                 <p className="text-muted-foreground text-sm">Total Profit</p>
                 <h3 className="text-2xl font-bold text-foreground">{formatCurrency(totalProfit)}</h3>
-                <p className={`text-xs ${profitChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {profitChange >= 0 ? 
-                    <TrendingUp className="inline mr-1 h-3 w-3" /> : 
-                    <TrendingDown className="inline mr-1 h-3 w-3" />
-                  }
-                  {Math.abs(profitChange).toFixed(1)}% vs previous period
-                </p>
+
               </div>
               <div className="bg-green-100 p-2 rounded-lg">
                 <TrendingUp className="text-green-600 text-xl" />
@@ -83,13 +71,7 @@ export default function DataSummary({ data }: DataSummaryProps) {
               <div>
                 <p className="text-muted-foreground text-sm">Total Orders</p>
                 <h3 className="text-2xl font-bold text-foreground">{totalOrders.toLocaleString()}</h3>
-                <p className={`text-xs ${ordersChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {ordersChange >= 0 ? 
-                    <TrendingUp className="inline mr-1 h-3 w-3" /> : 
-                    <TrendingDown className="inline mr-1 h-3 w-3" />
-                  }
-                  {Math.abs(ordersChange).toFixed(1)}% vs previous period
-                </p>
+
               </div>
               <div className="bg-purple-100 p-2 rounded-lg">
                 <ShoppingCart className="text-purple-600 text-xl" />
@@ -105,13 +87,7 @@ export default function DataSummary({ data }: DataSummaryProps) {
               <div>
                 <p className="text-muted-foreground text-sm">Avg. Order Value</p>
                 <h3 className="text-2xl font-bold text-foreground">{formatCurrency(avgOrderValue)}</h3>
-                <p className={`text-xs ${aovChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {aovChange >= 0 ? 
-                    <TrendingUp className="inline mr-1 h-3 w-3" /> : 
-                    <TrendingDown className="inline mr-1 h-3 w-3" />
-                  }
-                  {Math.abs(aovChange).toFixed(1)}% vs previous period
-                </p>
+
               </div>
               <div className="bg-amber-100 p-2 rounded-lg">
                 <Receipt className="text-amber-600 text-xl" />

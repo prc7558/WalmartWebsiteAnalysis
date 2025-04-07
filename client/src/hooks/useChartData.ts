@@ -4,8 +4,10 @@ import {
   calculateTotalsByField, 
   calculateTotalsByPeriod, 
   getTopCountriesBySales,
+  getAllCountriesBySales,
   calculateSegmentDistribution,
-  calculateShipModeDistribution
+  calculateShipModeDistribution,
+  calculateSubCategoryDistribution
 } from "@/lib/dataProcessor";
 import { MONTHS } from "@/lib/constants";
 
@@ -113,11 +115,23 @@ export function useChartData(
     };
   }, [data]);
   
+  // Get all countries by sales for pie chart
+  const allCountriesData = useMemo(() => {
+    return getAllCountriesBySales(data);
+  }, [data]);
+  
+  // Get subcategory distribution for bar chart
+  const subCategoryChartData = useMemo(() => {
+    return calculateSubCategoryDistribution(data);
+  }, [data]);
+  
   return {
     categoryChartData,
     salesTrendChartData,
     topCountriesData,
     segmentChartData,
-    shipModeChartData
+    shipModeChartData,
+    allCountriesData,
+    subCategoryChartData
   };
 }

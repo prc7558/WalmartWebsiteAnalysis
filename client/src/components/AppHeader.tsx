@@ -12,7 +12,7 @@ export default function AppHeader({ onHelpClick, onThemeToggle, isDarkTheme }: A
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <ChartLine className="text-white text-2xl" />
-          <h1 className="text-white text-xl font-semibold">DataInsight Dashboard</h1>
+          <h1 className="text-white text-xl font-semibold">Walmart Sales Dashboard</h1>
         </div>
         <div className="flex items-center space-x-4">
           <button

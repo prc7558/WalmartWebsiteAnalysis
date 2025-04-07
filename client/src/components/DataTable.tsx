@@ -122,27 +122,6 @@ export default function DataTable({ data }: DataTableProps) {
     return pages;
   };
   
-  const getOrderStatus = (orderData: OrderData) => {
-    // In a real application, you would determine this from data
-    // For demo purposes, we'll use a random status
-    const statuses = ["Completed", "Processing", "Shipping"];
-    const randomIndex = Math.floor(orderData["Order ID"] % 3);
-    return statuses[randomIndex];
-  };
-  
-  const getStatusClassName = (status: string) => {
-    switch (status) {
-      case "Completed":
-        return "bg-green-100 text-green-800";
-      case "Processing":
-        return "bg-yellow-100 text-yellow-800";
-      case "Shipping":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-  
   return (
     <Card className="mb-6">
       <CardContent className="p-4">
@@ -187,15 +166,11 @@ export default function DataTable({ data }: DataTableProps) {
                 <TableHead className="text-xs font-medium text-muted-foreground">Category</TableHead>
                 <TableHead className="text-xs font-medium text-muted-foreground">Total</TableHead>
                 <TableHead className="text-xs font-medium text-muted-foreground">Profit</TableHead>
-                <TableHead className="text-xs font-medium text-muted-foreground">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {paginatedData.length > 0 ? (
                 paginatedData.map((order) => {
-                  const status = getOrderStatus(order);
-                  const statusClass = getStatusClassName(status);
-                  
                   return (
                     <TableRow key={order["Order ID"]} className="hover:bg-muted/50">
                       <TableCell className="text-sm">#{order["Order ID"]}</TableCell>
@@ -207,17 +182,12 @@ export default function DataTable({ data }: DataTableProps) {
                       <TableCell className={`text-sm ${order.Profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         {formatCurrency(order.Profit)}
                       </TableCell>
-                      <TableCell className="text-sm">
-                        <span className={`px-2 py-1 rounded-full text-xs ${statusClass}`}>
-                          {status}
-                        </span>
-                      </TableCell>
                     </TableRow>
                   );
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-4 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
                     No orders found matching your search.
                   </TableCell>
                 </TableRow>

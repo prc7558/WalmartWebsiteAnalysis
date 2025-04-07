@@ -24,18 +24,24 @@ export default function DataVisualizations({ data }: DataVisualizationsProps) {
   const salesTrendChartRef = useRef<HTMLCanvasElement>(null);
   const segmentChartRef = useRef<HTMLCanvasElement>(null);
   const shipModeChartRef = useRef<HTMLCanvasElement>(null);
+  const countriesChartRef = useRef<HTMLCanvasElement>(null);
+  const subCategoryChartRef = useRef<HTMLCanvasElement>(null);
 
   const categoryChartInstance = useRef<Chart | null>(null);
   const salesTrendChartInstance = useRef<Chart | null>(null);
   const segmentChartInstance = useRef<Chart | null>(null);
   const shipModeChartInstance = useRef<Chart | null>(null);
+  const countriesChartInstance = useRef<Chart | null>(null);
+  const subCategoryChartInstance = useRef<Chart | null>(null);
   
   const {
     categoryChartData,
     salesTrendChartData,
     segmentChartData,
     shipModeChartData,
-    topCountriesData
+    topCountriesData,
+    allCountriesData,
+    subCategoryChartData
   } = useChartData(data, categoryPeriod, salesTrendPeriod);
   
   // Initialize and update category chart
@@ -227,6 +233,132 @@ export default function DataVisualizations({ data }: DataVisualizationsProps) {
     };
   }, [shipModeChartData]);
   
+  // Initialize and update countries chart
+  useEffect(() => {
+    if (countriesChartRef.current) {
+      const ctx = countriesChartRef.current.getContext('2d');
+      
+      if (ctx) {
+        if (countriesChartInstance.current) {
+          countriesChartInstance.current.destroy();
+        }
+        
+        // Generate gradient colors for the pie chart (15 countries)
+        const colors = Array.from({ length: 15 }, (_, i) => {
+          const hue = (210 + i * 25) % 360; // Base blue color with variations
+          return `hsl(${hue}, 75%, 60%)`;
+        });
+        
+        countriesChartInstance.current = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: allCountriesData.slice(0, 15).map(country => country.name),
+            datasets: [{
+              data: allCountriesData.slice(0, 15).map(country => country.value),
+              backgroundColor: colors,
+              borderWidth: 1,
+              borderColor: '#fff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  boxWidth: 12,
+                  font: {
+                    size: 10
+                  }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const value = context.parsed;
+                    return `${context.label}: ${formatCurrency(value)} (${allCountriesData[context.dataIndex].percentage}%)`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+    
+    return () => {
+      if (countriesChartInstance.current) {
+        countriesChartInstance.current.destroy();
+      }
+    };
+  }, [allCountriesData]);
+  
+  // Initialize and update subcategory chart
+  useEffect(() => {
+    if (subCategoryChartRef.current) {
+      const ctx = subCategoryChartRef.current.getContext('2d');
+      
+      if (ctx) {
+        if (subCategoryChartInstance.current) {
+          subCategoryChartInstance.current.destroy();
+        }
+        
+        // Generate gradient colors for the bar chart
+        const colors = Array.from({ length: subCategoryChartData.labels.length }, (_, i) => {
+          const hue = (210 + i * 10) % 360; // Base blue color with variations
+          return `hsl(${hue}, 75%, 60%)`;
+        });
+        
+        subCategoryChartInstance.current = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: subCategoryChartData.labels,
+            datasets: [{
+              label: 'Sales',
+              data: subCategoryChartData.values,
+              backgroundColor: colors,
+              borderWidth: 0
+            }]
+          },
+          options: {
+            indexAxis: 'y', // Horizontal bar chart
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              x: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return '$' + (value as number).toLocaleString();
+                  }
+                }
+              },
+              y: {
+                ticks: {
+                  font: {
+                    size: 10
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+    
+    return () => {
+      if (subCategoryChartInstance.current) {
+        subCategoryChartInstance.current.destroy();
+      }
+    };
+  }, [subCategoryChartData]);
+  
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', DEFAULT_CURRENCY_FORMAT).format(value);
   };
@@ -337,6 +469,28 @@ export default function DataVisualizations({ data }: DataVisualizationsProps) {
                   <div className="font-semibold">{shipModeChartData.values[index]}%</div>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+      
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Countries Pie Chart */}
+        <Card>
+          <CardContent className="p-4">
+            <h3 className="font-semibold text-foreground mb-4">All Countries by Sales</h3>
+            <div className="h-80">
+              <canvas ref={countriesChartRef}></canvas>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Sub-Categories Bar Chart */}
+        <Card>
+          <CardContent className="p-4">
+            <h3 className="font-semibold text-foreground mb-4">Sales by Sub-Category</h3>
+            <div className="h-80">
+              <canvas ref={subCategoryChartRef}></canvas>
             </div>
           </CardContent>
         </Card>

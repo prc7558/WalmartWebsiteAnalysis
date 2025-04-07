@@ -254,3 +254,62 @@ export function getTopCustomer(data: OrderData[]): { name: string, totalSales: n
     orderCount: customerMap[topCustomer]?.orderIds.size || 0
   };
 }
+
+export function getAllCountriesBySales(data: OrderData[]): { name: string, value: number, percentage: number }[] {
+  // Group sales by country
+  const salesByCountry: Record<string, number> = {};
+  
+  data.forEach(item => {
+    const country = item.Country;
+    const sales = item["Total Sales"];
+    
+    if (!salesByCountry[country]) {
+      salesByCountry[country] = 0;
+    }
+    
+    salesByCountry[country] += sales;
+  });
+  
+  // Convert to array for sorting
+  const countrySalesArray = Object.entries(salesByCountry).map(([name, value]) => ({ name, value }));
+  
+  // Sort by sales (descending)
+  countrySalesArray.sort((a, b) => b.value - a.value);
+  
+  // Calculate total sales for percentage
+  const totalSales = countrySalesArray.reduce((sum, country) => sum + country.value, 0);
+  
+  // Add percentage to each country
+  return countrySalesArray.map(country => ({
+    ...country,
+    percentage: Math.round((country.value / totalSales) * 100)
+  }));
+}
+
+export function calculateSubCategoryDistribution(data: OrderData[]): { labels: string[], values: number[] } {
+  // Group sales by subcategory
+  const salesBySubCategory: Record<string, number> = {};
+  let totalSales = 0;
+  
+  data.forEach(item => {
+    const subCategory = item["Sub-Category"];
+    const sales = item["Total Sales"];
+    
+    if (!salesBySubCategory[subCategory]) {
+      salesBySubCategory[subCategory] = 0;
+    }
+    
+    salesBySubCategory[subCategory] += sales;
+    totalSales += sales;
+  });
+  
+  // Convert to array for sorting
+  const subCategorySalesArray = Object.entries(salesBySubCategory)
+    .map(([label, value]) => ({ label, value }))
+    .sort((a, b) => b.value - a.value);
+  
+  return {
+    labels: subCategorySalesArray.map(item => item.label),
+    values: subCategorySalesArray.map(item => item.value)
+  };
+}
