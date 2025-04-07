@@ -13,36 +13,18 @@ import { MONTHS } from "@/lib/constants";
 
 export function useChartData(
   data: OrderData[], 
-  categoryPeriod: string, 
   salesTrendPeriod: string
 ) {
   // Calculate data for the category chart
   const categoryChartData = useMemo<ChartData>(() => {
     const categories = Array.from(new Set(data.map(item => item.Category)));
+    const totals = calculateTotalsByField(data, 'Category');
     
-    if (categoryPeriod === 'month') {
-      // Monthly data - current implementation
-      const totals = calculateTotalsByField(data, 'Category');
-      return {
-        labels: categories,
-        values: categories.map(category => totals[category] || 0)
-      };
-    } else if (categoryPeriod === 'quarter') {
-      // Quarterly data
-      const totals = calculateTotalsByField(data, 'Category');
-      return {
-        labels: categories,
-        values: categories.map(category => totals[category] || 0)
-      };
-    } else {
-      // Yearly data
-      const totals = calculateTotalsByField(data, 'Category');
-      return {
-        labels: categories,
-        values: categories.map(category => totals[category] || 0)
-      };
-    }
-  }, [data, categoryPeriod]);
+    return {
+      labels: categories,
+      values: categories.map(category => totals[category] || 0)
+    };
+  }, [data]);
   
   // Calculate data for the sales trend chart
   const salesTrendChartData = useMemo<ChartData>(() => {

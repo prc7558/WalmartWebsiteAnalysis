@@ -50,11 +50,80 @@ export default function PrintableView({ data, isOpen, onClose }: PrintableViewPr
   // Handle print functionality
   useEffect(() => {
     if (isOpen && printContainerRef.current) {
-      // Add a small delay to ensure all content is rendered
+      // Add a larger delay to ensure all content is rendered
       const printTimeout = setTimeout(() => {
-        window.print();
+        const content = printContainerRef.current?.innerHTML || '';
+        
+        // Create a new window for printing
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+          console.error('Could not open print window');
+          onClose();
+          return;
+        }
+        
+        // Set up the print window
+        printWindow.document.open();
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>Walmart Sales Dashboard - Print Report</title>
+              <style>
+                body {
+                  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                  color: black;
+                  background: white;
+                  margin: 0;
+                  padding: 20px;
+                }
+                table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin-bottom: 20px;
+                }
+                th, td {
+                  border: 1px solid #ddd;
+                  padding: 8px;
+                  text-align: left;
+                }
+                th {
+                  background-color: #f2f2f2;
+                }
+                .page-break {
+                  page-break-before: always;
+                }
+                h1 {
+                  font-size: 24pt;
+                }
+                h2 {
+                  font-size: 18pt;
+                }
+                .card {
+                  border: 1px solid #ddd;
+                  padding: 15px;
+                  margin-bottom: 15px;
+                  border-radius: 5px;
+                }
+              </style>
+            </head>
+            <body>
+              ${content}
+              <script>
+                window.onload = function() {
+                  window.print();
+                  window.setTimeout(function() {
+                    window.close();
+                  }, 500);
+                };
+              </script>
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+        
         onClose();
-      }, 500);
+      }, 800);
       
       return () => clearTimeout(printTimeout);
     }

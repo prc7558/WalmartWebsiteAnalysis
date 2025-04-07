@@ -17,7 +17,7 @@ interface DataVisualizationsProps {
 }
 
 export default function DataVisualizations({ data }: DataVisualizationsProps) {
-  const [categoryPeriod, setCategoryPeriod] = useState("month");
+  // categoryPeriod removed as it's no longer needed
   const [salesTrendPeriod, setSalesTrendPeriod] = useState("month");
   
   const categoryChartRef = useRef<HTMLCanvasElement>(null);
@@ -42,7 +42,7 @@ export default function DataVisualizations({ data }: DataVisualizationsProps) {
     topCountriesData,
     allCountriesData,
     subCategoryChartData
-  } = useChartData(data, categoryPeriod, salesTrendPeriod);
+  } = useChartData(data, salesTrendPeriod);
   
   // Initialize and update category chart
   useEffect(() => {
@@ -371,18 +371,6 @@ export default function DataVisualizations({ data }: DataVisualizationsProps) {
           <CardContent className="p-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold text-foreground">Sales by Category</h3>
-              <div className="text-sm">
-                <Select value={categoryPeriod} onValueChange={setCategoryPeriod}>
-                  <SelectTrigger className="border border-input rounded p-1 text-xs w-32">
-                    <SelectValue placeholder="Monthly" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="month">Monthly</SelectItem>
-                    <SelectItem value="quarter">Quarterly</SelectItem>
-                    <SelectItem value="year">Yearly</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
             </div>
             <div className="h-64">
               <canvas ref={categoryChartRef}></canvas>
