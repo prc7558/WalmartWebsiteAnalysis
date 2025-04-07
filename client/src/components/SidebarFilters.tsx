@@ -63,22 +63,24 @@ export default function SidebarFilters({
   };
   
   const handleSelectChange = (field: keyof FilterState, value: string) => {
-    // Convert "all" values to empty strings for filter logic
-    const filterValue = value === 'all' ? '' : value;
+    // For the UI state, use the actual value including 'all'
+    // We'll convert it back to '' when applying filters
     
     // Reset state if country changes
-    if (field === 'country' && filterValue !== localFilterState.country) {
+    if (field === 'country' && value !== localFilterState.country) {
       setLocalFilterState({
         ...localFilterState,
-        [field]: filterValue,
-        state: ''
+        [field]: value,
+        state: 'all' // Reset state to 'all' when country changes
       });
     } else {
       setLocalFilterState({
         ...localFilterState,
-        [field]: filterValue
+        [field]: value
       });
     }
+    
+    console.log(`Changed ${field} to:`, value);
   };
   
   const clearFilters = () => {
@@ -97,7 +99,17 @@ export default function SidebarFilters({
   };
   
   const applyFilters = () => {
-    setFilterState(localFilterState);
+    // Convert 'all' values back to empty strings for filtering
+    const filtersToApply: FilterState = {
+      ...localFilterState,
+      country: localFilterState.country === 'all' ? '' : localFilterState.country,
+      category: localFilterState.category === 'all' ? '' : localFilterState.category,
+      segment: localFilterState.segment === 'all' ? '' : localFilterState.segment,
+      region: localFilterState.region === 'all' ? '' : localFilterState.region,
+      state: localFilterState.state === 'all' ? '' : localFilterState.state
+    };
+    console.log('Applying filters:', filtersToApply);
+    setFilterState(filtersToApply);
   };
   
   return (
@@ -246,16 +258,18 @@ export default function SidebarFilters({
             <Select 
               value={localFilterState.state} 
               onValueChange={(value) => handleSelectChange('state', value)}
-              disabled={!localFilterState.country}
+              disabled={!localFilterState.country || localFilterState.country === 'all'}
             >
               <SelectTrigger id="stateFilter" className="w-full">
                 <SelectValue placeholder="All States" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All States</SelectItem>
-                {localFilterState.country && statesByCountry[localFilterState.country]?.map((state) => (
-                  <SelectItem key={state} value={state}>{state}</SelectItem>
-                ))}
+                {localFilterState.country && localFilterState.country !== 'all' &&
+                  statesByCountry[localFilterState.country]?.map((state) => (
+                    <SelectItem key={state} value={state}>{state}</SelectItem>
+                  ))
+                }
               </SelectContent>
             </Select>
           )}

@@ -5,6 +5,8 @@ import { getUniqueValues, getStatesByCountry } from "./dataProcessor";
 export function useDataFiltering(data: OrderData[], filterState: FilterState) {
   // Get filtered data based on filter state
   const filteredData = useMemo(() => {
+    console.log('Filtering with state:', filterState);
+    console.log('Data length before filtering:', data.length);
     return data.filter(item => {
       // Date filter
       if (filterState.startDate && new Date(item.OrderDate) < filterState.startDate) {
@@ -47,6 +49,9 @@ export function useDataFiltering(data: OrderData[], filterState: FilterState) {
       return true;
     });
   }, [data, filterState]);
+  
+  // Log the filtered results
+  console.log('Data length after filtering:', filteredData.length);
 
   // Get unique values for filter options
   const uniqueCountries = useMemo(() => getUniqueValues(data, "Country"), [data]);
